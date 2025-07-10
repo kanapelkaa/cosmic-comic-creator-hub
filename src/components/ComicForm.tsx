@@ -1,0 +1,154 @@
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { X, Upload } from "lucide-react";
+import { useComics, Comic } from "@/hooks/useComics";
+
+interface ComicFormProps {
+  onClose: () => void;
+  comic?: Comic;
+}
+
+const ComicForm = ({ onClose, comic }: ComicFormProps) => {
+  const { addComic, updateComic } = useComics();
+  const [title, setTitle] = useState(comic?.title || "");
+  const [description, setDescription] = useState(comic?.description || "");
+  const [images, setImages] = useState<string[]>(comic?.images || []);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && images.length < 5) {
+      Array.from(files).forEach((file, index) => {
+        if (images.length + index < 5) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const result = event.target?.result as string;
+            setImages(prev => [...prev, result]);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (title && description && images.length > 0) {
+      if (comic) {
+        updateComic(comic.id, { title, description, images });
+      } else {
+        addComic({ title, description, images });
+      }
+      onClose();
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-card rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-card-foreground">
+            {comic ? 'Edit Comic' : 'Create New Comic'}
+          </h2>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X className="h-6 w-6" />
+          </Button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter comic title"
+              required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter comic description"
+              rows={4}
+              required
+            />
+          </div>
+
+          <div>
+            <Label>Images ({images.length}/5)</Label>
+            <div className="mt-2">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                className="hidden"
+                id="image-upload"
+                disabled={images.length >= 5}
+              />
+              <label
+                htmlFor="image-upload"
+                className={`flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 ${
+                  images.length >= 5 ? 'opacity-50 cursor-not-allowed' : 'border-muted-foreground'
+                }`}
+              >
+                <div className="text-center">
+                  <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    {images.length >= 5 ? 'Maximum 5 images' : 'Click to upload images'}
+                  </p>
+                </div>
+              </label>
+            </div>
+
+            {images.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                {images.map((image, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={image}
+                      alt={`Comic page ${index + 1}`}
+                      className="w-full h-32 object-cover rounded-lg"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2 w-6 h-6"
+                      onClick={() => removeImage(index)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-end space-x-4">
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={!title || !description || images.length === 0}>
+              {comic ? 'Update Comic' : 'Create Comic'}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default ComicForm;
