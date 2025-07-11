@@ -1,5 +1,7 @@
 
 import Navigation from "@/components/Navigation";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const About = () => {
   return (
@@ -23,9 +25,17 @@ const About = () => {
                 <p className="mb-4">
                   When I'm not drawing, you can find me exploring new art techniques, reading graphic novels, or brainstorming the next big story to tell. I believe that comics have the unique power to combine visual art with narrative in ways that can inspire, entertain, and provoke thought.
                 </p>
-                <p>
+                <p className="mb-6">
                   My goal is to create comics that not only look beautiful but also tell meaningful stories that resonate with people from all walks of life.
                 </p>
+                
+                <div className="mt-8">
+                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
+                    <Link to="/tetris">
+                      🎮 Start Playing Tetris
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
             

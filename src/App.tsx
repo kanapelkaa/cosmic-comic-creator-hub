@@ -10,6 +10,7 @@ import Portfolio from "./pages/Portfolio";
 import Comics from "./pages/Comics";
 import ComicView from "./pages/ComicView";
 import Admin from "./pages/Admin";
+import Tetris from "./pages/Tetris";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/comics" element={<Comics />} />
           <Route path="/comic/:id" element={<ComicView />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/tetris" element={<Tetris />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
