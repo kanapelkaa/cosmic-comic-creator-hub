@@ -1,9 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useComics } from "@/hooks/useComics";
 
 const ComicView = () => {
@@ -11,9 +11,25 @@ const ComicView = () => {
   const { comics } = useComics();
   const [currentPage, setCurrentPage] = useState(0);
 
+  console.log("Comic ID:", id, "Comics:", comics); // Debug log
+
   const comic = comics.find(c => c.id === id);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        prevPage();
+      } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        nextPage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentPage, comic]);
+
   if (!comic) {
+    console.log("Comic not found, redirecting to comics page");
     return <Navigate to="/comics" replace />;
   }
 
@@ -27,6 +43,10 @@ const ComicView = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
+  };
+
+  const goToPage = (pageIndex: number) => {
+    setCurrentPage(pageIndex);
   };
 
   return (
@@ -62,7 +82,7 @@ const ComicView = () => {
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 z-10"
                   onClick={prevPage}
                 >
                   <ChevronLeft className="h-6 w-6" />
@@ -73,28 +93,45 @@ const ComicView = () => {
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 z-10"
                   onClick={nextPage}
                 >
                   <ChevronRight className="h-6 w-6" />
                 </Button>
               )}
+              
+              {/* Click zones for navigation */}
+              <div 
+                className="absolute left-0 top-0 w-1/3 h-full cursor-pointer z-5"
+                onClick={prevPage}
+                style={{ display: currentPage > 0 ? 'block' : 'none' }}
+              />
+              <div 
+                className="absolute right-0 top-0 w-1/3 h-full cursor-pointer z-5"
+                onClick={nextPage}
+                style={{ display: currentPage < comic.images.length - 1 ? 'block' : 'none' }}
+              />
             </div>
           </div>
 
-          {/* Page Navigation */}
-          <div className="flex justify-center mt-6 space-x-2">
+          {/* Page Navigation Dots */}
+          <div className="flex justify-center mt-6 space-x-2 flex-wrap">
             {comic.images.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentPage(index)}
-                className={`w-3 h-3 rounded-full transition-colors ${
+                onClick={() => goToPage(index)}
+                className={`w-3 h-3 rounded-full transition-colors m-1 ${
                   index === currentPage 
                     ? 'bg-primary' 
                     : 'bg-muted hover:bg-muted-foreground'
                 }`}
               />
             ))}
+          </div>
+
+          {/* Navigation Info */}
+          <div className="text-center mt-4 text-sm text-muted-foreground">
+            Use arrow keys, click on the sides of the image, or click the dots to navigate
           </div>
         </div>
       </div>
