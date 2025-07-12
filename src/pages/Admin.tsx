@@ -25,7 +25,7 @@ const Admin = () => {
   };
 
   const handleDeleteComic = (id: string) => {
-    if (confirm("Are you sure you want to delete this comic?")) {
+    if (confirm("Вы уверены, что хотите удалить этот комикс?")) {
       deleteComic(id);
     }
   };
@@ -34,44 +34,44 @@ const Admin = () => {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Admin Panel</h1>
-          <p className="text-muted-foreground">Manage your comics and view site statistics</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Админ панель</h1>
+          <p className="text-muted-foreground">Управляйте комиксами и смотрите статистику сайта</p>
         </div>
 
         {/* Statistics */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Visitors</CardTitle>
+              <CardTitle className="text-sm font-medium">Количество просмотров</CardTitle>
               <Eye className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{visitorCount}</div>
-              <p className="text-xs text-muted-foreground">Site visits</p>
+              <p className="text-xs text-muted-foreground">Посещение сайта</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Comics</CardTitle>
+              <CardTitle className="text-sm font-medium">Всего комиксов</CardTitle>
               <Plus className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{comics.length}</div>
-              <p className="text-xs text-muted-foreground">Published comics</p>
+              <p className="text-xs text-muted-foreground">Опубликовать комикс</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Pages</CardTitle>
+              <CardTitle className="text-sm font-medium">Всего страниц</CardTitle>
               <Eye className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
                 {comics.reduce((total, comic) => total + comic.images.length, 0)}
               </div>
-              <p className="text-xs text-muted-foreground">Comic pages</p>
+              <p className="text-xs text-muted-foreground">Страницы комиксов</p>
             </CardContent>
           </Card>
         </div>
@@ -80,17 +80,17 @@ const Admin = () => {
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
-              <CardTitle>Comics Management</CardTitle>
+              <CardTitle>Управление комиксами</CardTitle>
               <Button onClick={() => setIsFormOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Create Comic
+                Создать комикс
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             {comics.length === 0 ? (
               <p className="text-center text-muted-foreground py-8">
-                No comics created yet. Click "Create Comic" to get started.
+                Комиксы пока не созданы. Нажмите «Создать комикс», чтобы начать.
               </p>
             ) : (
               <div className="space-y-4">
@@ -106,7 +106,7 @@ const Admin = () => {
                         <h3 className="font-semibold">{comic.title}</h3>
                         <p className="text-sm text-muted-foreground">{comic.description}</p>
                         <p className="text-xs text-muted-foreground">
-                          {comic.images.length} pages • Created {new Date(comic.createdAt).toLocaleDateString()}
+                          {comic.images.length} страниц • Создано {new Date(comic.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>

@@ -5,22 +5,22 @@ const Portfolio = () => {
   const projects = [
     {
       id: 1,
-      title: "Cosmic Adventures",
-      description: "A sci-fi comic series exploring the depths of space and human nature.",
+      title: "Космические приключения",
+      description: "Научно-фантастический комикс, исследующий глубины космоса и человеческую природу».A sci-fi comic series exploring the depths of space and human nature.",
       image: "/portfolio.png",
       year: "2023"
     },
     {
       id: 2,
-      title: "Urban Legends",
-      description: "Modern mythology meets street art in this contemporary comic series.",
+      title: "Городские легенды",
+      description: "Современная мифология встречается с уличным искусством в этой современной серии комиксов.",
       image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop",
       year: "2022"
     },
     {
       id: 3,
-      title: "Digital Illustrations",
-      description: "Collection of character designs and concept art for various projects.",
+      title: "Цифровые иллюстрации",
+      description: "Коллекция дизайнов персонажей и концепт-артов для различных проектов",
       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
       year: "2023"
     }
@@ -33,7 +33,7 @@ const Portfolio = () => {
       <div className="pt-24 container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-12 text-center text-foreground">
-            My Portfolio
+            Моё портфолио
           </h1>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

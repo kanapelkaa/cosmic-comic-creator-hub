@@ -29,7 +29,7 @@ const ComicView = () => {
   }, [currentPage, comic]);
 
   if (!comic) {
-    console.log("Comic not found, redirecting to comics page");
+    console.log("Комикс не найден, перенаправление на страницу комиксов");
     return <Navigate to="/comics" replace />;
   }
 
@@ -131,7 +131,7 @@ const ComicView = () => {
 
           {/* Navigation Info */}
           <div className="text-center mt-4 text-sm text-muted-foreground">
-            Use arrow keys, click on the sides of the image, or click the dots to navigate
+            Используйте клавиши со стрелками, нажимайте на края изображения или нажимайте на точки для навигации.
           </div>
         </div>
       </div>

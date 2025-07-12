@@ -26,13 +26,13 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-6">
             <Button variant="ghost" asChild>
-              <Link to="/about">About Me</Link>
+              <Link to="/about">Обо мне</Link>
             </Button>
             <Button variant="ghost" asChild>
-              <Link to="/portfolio">Portfolio</Link>
+              <Link to="/portfolio">Портфолио</Link>
             </Button>
             <Button variant="ghost" asChild>
-              <Link to="/comics">Comics</Link>
+              <Link to="/comics">Комиксы</Link>
             </Button>
           </div>
 
@@ -51,13 +51,13 @@ const Navigation = () => {
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 space-y-2">
             <Button variant="ghost" asChild className="w-full justify-start">
-              <Link to="/about" onClick={() => setIsMenuOpen(false)}>About Me</Link>
+              <Link to="/about" onClick={() => setIsMenuOpen(false)}>Обо мне</Link>
             </Button>
             <Button variant="ghost" asChild className="w-full justify-start">
-              <Link to="/portfolio" onClick={() => setIsMenuOpen(false)}>Portfolio</Link>
+              <Link to="/portfolio" onClick={() => setIsMenuOpen(false)}>Портфолио</Link>
             </Button>
             <Button variant="ghost" asChild className="w-full justify-start">
-              <Link to="/comics" onClick={() => setIsMenuOpen(false)}>Comics</Link>
+              <Link to="/comics" onClick={() => setIsMenuOpen(false)}>Комиксы</Link>
             </Button>
           </div>
         )}

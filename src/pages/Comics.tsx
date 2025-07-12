@@ -78,7 +78,7 @@ const Comics = () => {
         <div className="max-w-6xl mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-8">
-              <TabsTrigger value="comics-list">Comics Collection</TabsTrigger>
+              <TabsTrigger value="comics-list">Коллекция комиксов</TabsTrigger>
               {openTabs.map((comicId) => {
                 const comic = comics.find(c => c.id === comicId);
                 return (
@@ -104,13 +104,13 @@ const Comics = () => {
 
             <TabsContent value="comics-list">
               <h1 className="text-4xl md:text-5xl font-bold mb-12 text-center text-foreground">
-                Comics Collection
+                Коллекция комиксов
               </h1>
               
               {comics.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-xl text-muted-foreground mb-4">No comics available yet.</p>
-                  <p className="text-muted-foreground">Check back soon for new releases!</p>
+                  <p className="text-xl text-muted-foreground mb-4">Комиксы пока недоступны.</p>
+                  <p className="text-muted-foreground">Скоро появятся новые релизы!</p>
                 </div>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -160,7 +160,7 @@ const Comics = () => {
                         {comic.description}
                       </p>
                       <div className="text-sm text-muted-foreground">
-                        Page {currentPage + 1} of {comic.images.length}
+                        Страница {currentPage + 1} of {comic.images.length}
                       </div>
                     </div>
 
@@ -227,7 +227,7 @@ const Comics = () => {
 
                     {/* Navigation Info */}
                     <div className="text-center mt-4 text-sm text-muted-foreground">
-                      Use arrow keys, click on the sides of the image, or click the dots to navigate
+                      Используйте клавиши со стрелками, нажимайте на края изображения или нажимайте на точки для навигации.
                     </div>
                   </div>
                 </TabsContent>

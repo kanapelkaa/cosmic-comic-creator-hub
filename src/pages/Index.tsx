@@ -19,23 +19,23 @@ const Index = () => {
       <div className="pt-24 flex items-center justify-center min-h-screen">
         <div className="text-center text-foreground px-4">
           <h1 className="text-6xl md:text-8xl font-bold mb-6 animate-fade-in bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Cosmic Comic Hub
+            Cosmic Comic Hub 
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-fade-in text-muted-foreground">
-            Welcome to my creative universe where stories come to life through art and imagination
+            Добро пожаловать в мою творческую вселенную, где истории оживают благодаря искусству и воображению.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
             <a 
               href="/comics" 
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg text-lg font-semibold transition-all hover:scale-105 shadow-lg"
             >
-              Explore Comics
+              Изучать комиксы
             </a>
             <a 
               href="/about" 
               className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8 py-3 rounded-lg text-lg font-semibold transition-all hover:scale-105 shadow-lg"
             >
-              About Me
+              Обо мне
             </a>
           </div>
         </div>
@@ -46,7 +46,7 @@ const Index = () => {
         <div className="max-w-4xl mx-auto">
           <div className="bg-card/80 backdrop-blur-lg border border-border/50 rounded-2xl p-6 shadow-xl">
             <h3 className="text-xl font-semibold text-center mb-4 text-card-foreground">
-              Get in Touch
+              Контакты 
             </h3>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
