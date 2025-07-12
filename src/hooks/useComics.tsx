@@ -1,16 +1,7 @@
-
 import { useState, useEffect } from 'react';
-import { comicsStorage } from '@/services/comicsStorage';
+import { comicsStorage, Comic } from '@/services/comicsStorage';
 
-export interface Comic {
-  id: string;
-  title: string;
-  description: string;
-  images: string[];
-  createdAt: string;
-  authorId?: string;
-  status: 'published' | 'pending' | 'rejected';
-}
+export { Comic } from '@/services/comicsStorage';
 
 export const useComics = () => {
   const [comics, setComics] = useState<Comic[]>([]);

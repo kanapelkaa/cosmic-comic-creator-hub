@@ -5,6 +5,8 @@ export interface Comic {
   description: string;
   images: string[];
   createdAt: string;
+  authorId?: string;
+  status: 'published' | 'pending' | 'rejected';
 }
 
 // Simple file-based storage simulation
@@ -35,16 +37,26 @@ class ComicsStorage {
       // Try to load from network first
       const networkComics = await this.loadFromNetwork();
       if (networkComics.length > 0) {
-        return networkComics;
+        return this.migrateComics(networkComics);
       }
       
       // Fall back to localStorage
       const localComics = localStorage.getItem(this.storageKey);
-      return localComics ? JSON.parse(localComics) : [];
+      const comics = localComics ? JSON.parse(localComics) : [];
+      return this.migrateComics(comics);
     } catch (error) {
       console.error('Failed to load comics:', error);
       return [];
     }
+  }
+  
+  // Migrate old comics to new format
+  private migrateComics(comics: any[]): Comic[] {
+    return comics.map(comic => ({
+      ...comic,
+      status: comic.status || 'published', // Default to published for existing comics
+      authorId: comic.authorId || undefined
+    }));
   }
   
   // Simulate network sync (in a real app, this would be an API call)
