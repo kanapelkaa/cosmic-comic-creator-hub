@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { comicsStorage, Comic } from '@/services/comicsStorage';
 
-export { Comic } from '@/services/comicsStorage';
+export type { Comic } from '@/services/comicsStorage';
 
 export const useComics = () => {
   const [comics, setComics] = useState<Comic[]>([]);
