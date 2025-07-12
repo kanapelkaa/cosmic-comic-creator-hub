@@ -12,7 +12,7 @@ import ModerationTab from "@/components/admin/ModerationTab";
 import AdminLoginModal from "@/components/AdminLoginModal";
 
 const Admin = () => {
-  const { allComics, pendingComics, deleteComic, moderateComic } = useComics();
+  const { allComics, pendingComics, deleteComic, moderateComic, getTopUsers } = useComics();
   const visitorCount = useVisitorCount();
   const { user, logout } = useAuth();
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -29,6 +29,7 @@ const Admin = () => {
   }, [user]);
 
   const publishedComics = allComics.filter(comic => comic.status === 'published');
+  const topUsers = getTopUsers();
 
   const handleEditComic = (comic: Comic) => {
     setEditingComic(comic);
@@ -99,6 +100,7 @@ const Admin = () => {
           visitorCount={visitorCount}
           publishedComics={publishedComics}
           pendingComics={pendingComics}
+          topUsers={topUsers}
         />
 
         <Tabs defaultValue="published" className="space-y-4">

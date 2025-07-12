@@ -54,11 +54,13 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
       if (comic) {
         updateComic(comic.id, { title, description, images });
       } else {
+        // Only add authorId if user is not admin - admin comics are published directly
+        const authorId = user?.role === 'admin' ? undefined : user?.id;
         addComic({ 
           title, 
           description, 
           images,
-          authorId: user?.id // Associate comic with current user
+          authorId
         });
       }
       onClose();
@@ -131,11 +133,11 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
             {images.length > 0 && (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                 {images.map((image, index) => (
-                  <div key={index} className="relative">
+                  <div key={index} className="relative aspect-[3/4] border rounded overflow-hidden">
                     <img
                       src={image}
                       alt={`Страница комикса ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg"
+                      className="w-full h-full object-contain"
                     />
                     <Button
                       type="button"
@@ -151,6 +153,14 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
               </div>
             )}
           </div>
+
+          {user?.role !== 'admin' && !comic && (
+            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm text-yellow-800">
+                Ваш комикс будет отправлен на модерацию перед публикацией.
+              </p>
+            </div>
+          )}
 
           <div className="flex justify-end space-x-4">
             <Button type="button" variant="outline" onClick={onClose}>

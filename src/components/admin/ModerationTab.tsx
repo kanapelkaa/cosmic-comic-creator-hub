@@ -26,11 +26,13 @@ const ModerationTab = ({ pendingComics, onModerateComic }: ModerationTabProps) =
               <div key={comic.id} className="p-4 border rounded-lg">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-4">
-                    <img
-                      src={comic.images[0]}
-                      alt={comic.title}
-                      className="w-16 h-20 object-cover rounded"
-                    />
+                    <div className="w-16 h-24 flex-shrink-0">
+                      <img
+                        src={comic.images[0]}
+                        alt={comic.title}
+                        className="w-full h-full object-contain rounded border"
+                      />
+                    </div>
                     <div>
                       <h3 className="font-semibold">{comic.title}</h3>
                       <p className="text-sm text-muted-foreground">{comic.description}</p>
@@ -62,15 +64,16 @@ const ModerationTab = ({ pendingComics, onModerateComic }: ModerationTabProps) =
                 {/* Preview images */}
                 <div className="grid grid-cols-4 gap-2 mt-4">
                   {comic.images.slice(0, 4).map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Страница ${index + 1}`}
-                      className="w-full h-20 object-cover rounded"
-                    />
+                    <div key={index} className="aspect-[3/4] border rounded overflow-hidden">
+                      <img
+                        src={image}
+                        alt={`Страница ${index + 1}`}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
                   ))}
                   {comic.images.length > 4 && (
-                    <div className="w-full h-20 bg-muted rounded flex items-center justify-center text-sm text-muted-foreground">
+                    <div className="aspect-[3/4] bg-muted rounded flex items-center justify-center text-sm text-muted-foreground border">
                       +{comic.images.length - 4} ещё
                     </div>
                   )}
