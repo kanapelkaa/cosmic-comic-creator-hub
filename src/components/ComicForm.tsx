@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { X, Upload } from "lucide-react";
 import { useComics, Comic } from "@/hooks/useComics";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ComicFormProps {
   onClose: () => void;
@@ -14,6 +15,7 @@ interface ComicFormProps {
 
 const ComicForm = ({ onClose, comic }: ComicFormProps) => {
   const { addComic, updateComic } = useComics();
+  const { user } = useAuth();
   const [title, setTitle] = useState(comic?.title || "");
   const [description, setDescription] = useState(comic?.description || "");
   const [images, setImages] = useState<string[]>(comic?.images || []);
@@ -24,12 +26,11 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
       const fileArray = Array.from(files);
       
       fileArray.forEach((file) => {
-        if (images.length < 10) { // Increased limit to 10 images
+        if (images.length < 10) {
           const reader = new FileReader();
           reader.onload = (event) => {
             const result = event.target?.result as string;
             setImages(prev => {
-              // Check if we haven't reached the limit yet
               if (prev.length < 10) {
                 return [...prev, result];
               }
@@ -40,7 +41,6 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
         }
       });
     }
-    // Clear the input to allow selecting the same files again
     e.target.value = '';
   };
 
@@ -54,7 +54,12 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
       if (comic) {
         updateComic(comic.id, { title, description, images });
       } else {
-        addComic({ title, description, images });
+        addComic({ 
+          title, 
+          description, 
+          images,
+          authorId: user?.id // Associate comic with current user
+        });
       }
       onClose();
     }

@@ -75,9 +75,6 @@ const Navigation = () => {
                     <DropdownMenuItem asChild>
                       <Link to="/profile">Мой профиль</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/my-comics">Мои комиксы</Link>
-                    </DropdownMenuItem>
                     {user?.role === 'admin' && (
                       <DropdownMenuItem asChild>
                         <Link to="/admin">Админ панель</Link>
@@ -132,9 +129,6 @@ const Navigation = () => {
                 <>
                   <Button variant="ghost" asChild className="w-full justify-start">
                     <Link to="/profile" onClick={() => setIsMenuOpen(false)}>Мой профиль</Link>
-                  </Button>
-                  <Button variant="ghost" asChild className="w-full justify-start">
-                    <Link to="/my-comics" onClick={() => setIsMenuOpen(false)}>Мои комиксы</Link>
                   </Button>
                   {user?.role === 'admin' && (
                     <Button variant="ghost" asChild className="w-full justify-start">
