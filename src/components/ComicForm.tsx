@@ -20,18 +20,28 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files && images.length < 5) {
-      Array.from(files).forEach((file, index) => {
-        if (images.length + index < 5) {
+    if (files) {
+      const fileArray = Array.from(files);
+      
+      fileArray.forEach((file) => {
+        if (images.length < 10) { // Increased limit to 10 images
           const reader = new FileReader();
           reader.onload = (event) => {
             const result = event.target?.result as string;
-            setImages(prev => [...prev, result]);
+            setImages(prev => {
+              // Check if we haven't reached the limit yet
+              if (prev.length < 10) {
+                return [...prev, result];
+              }
+              return prev;
+            });
           };
           reader.readAsDataURL(file);
         }
       });
     }
+    // Clear the input to allow selecting the same files again
+    e.target.value = '';
   };
 
   const removeImage = (index: number) => {
@@ -55,7 +65,7 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
       <div className="bg-card rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-card-foreground">
-            {comic ? 'Edit Comic' : 'Create New Comic'}
+            {comic ? 'Редактировать комикс' : 'Создать новый комикс'}
           </h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-6 w-6" />
@@ -64,30 +74,30 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">Название</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter comic title"
+              placeholder="Введите название комикса"
               required
             />
           </div>
 
           <div>
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Описание</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter comic description"
+              placeholder="Введите описание комикса"
               rows={4}
               required
             />
           </div>
 
           <div>
-            <Label>Images ({images.length}/5)</Label>
+            <Label>Изображения ({images.length}/10)</Label>
             <div className="mt-2">
               <input
                 type="file"
@@ -96,18 +106,18 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
                 onChange={handleImageUpload}
                 className="hidden"
                 id="image-upload"
-                disabled={images.length >= 5}
+                disabled={images.length >= 10}
               />
               <label
                 htmlFor="image-upload"
                 className={`flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 ${
-                  images.length >= 5 ? 'opacity-50 cursor-not-allowed' : 'border-muted-foreground'
+                  images.length >= 10 ? 'opacity-50 cursor-not-allowed' : 'border-muted-foreground'
                 }`}
               >
                 <div className="text-center">
                   <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    {images.length >= 5 ? 'Maximum 5 images' : 'Click to upload images'}
+                    {images.length >= 10 ? 'Максимум 10 изображений' : 'Нажмите для загрузки изображений'}
                   </p>
                 </div>
               </label>
@@ -119,7 +129,7 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
                   <div key={index} className="relative">
                     <img
                       src={image}
-                      alt={`Comic page ${index + 1}`}
+                      alt={`Страница комикса ${index + 1}`}
                       className="w-full h-32 object-cover rounded-lg"
                     />
                     <Button
@@ -139,10 +149,10 @@ const ComicForm = ({ onClose, comic }: ComicFormProps) => {
 
           <div className="flex justify-end space-x-4">
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              Отмена
             </Button>
             <Button type="submit" disabled={!title || !description || images.length === 0}>
-              {comic ? 'Update Comic' : 'Create Comic'}
+              {comic ? 'Обновить комикс' : 'Создать комикс'}
             </Button>
           </div>
         </form>

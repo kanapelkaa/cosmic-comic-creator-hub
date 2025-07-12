@@ -8,6 +8,8 @@ export interface Comic {
   description: string;
   images: string[];
   createdAt: string;
+  authorId?: string;
+  status: 'published' | 'pending' | 'rejected';
 }
 
 export const useComics = () => {
@@ -41,11 +43,12 @@ export const useComics = () => {
     }
   };
 
-  const addComic = async (comic: Omit<Comic, 'id' | 'createdAt'>) => {
+  const addComic = async (comic: Omit<Comic, 'id' | 'createdAt' | 'status'>) => {
     const newComic: Comic = {
       ...comic,
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
+      status: comic.authorId ? 'pending' : 'published', // User comics need approval
     };
     const updatedComics = [...comics, newComic];
     await saveComics(updatedComics);
@@ -63,12 +66,23 @@ export const useComics = () => {
     await saveComics(updatedComics);
   };
 
+  const moderateComic = async (id: string, status: 'published' | 'rejected') => {
+    await updateComic(id, { status });
+  };
+
+  // Filter comics based on status
+  const publishedComics = comics.filter(comic => comic.status === 'published');
+  const pendingComics = comics.filter(comic => comic.status === 'pending');
+
   return {
-    comics,
+    comics: publishedComics, // Only show published comics by default
+    allComics: comics, // All comics for admin
+    pendingComics,
     loading,
     addComic,
     deleteComic,
     updateComic,
+    moderateComic,
     refreshComics: loadComics,
   };
 };
