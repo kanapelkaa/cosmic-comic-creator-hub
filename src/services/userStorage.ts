@@ -22,7 +22,23 @@ class UserStorage {
   async loadUsers(): Promise<User[]> {
     try {
       const userData = localStorage.getItem(this.storageKey);
-      return userData ? JSON.parse(userData) : [];
+      const users = userData ? JSON.parse(userData) : [];
+      
+      // Ensure default admin user exists
+      if (users.length === 0 || !users.find((user: User) => user.role === 'admin')) {
+        const defaultAdmin: User = {
+          id: 'admin-default',
+          username: 'admin',
+          email: 'admin@admin.com',
+          password: 'admin',
+          role: 'admin',
+          createdAt: new Date().toISOString(),
+        };
+        users.push(defaultAdmin);
+        await this.saveUsers(users);
+      }
+      
+      return users;
     } catch (error) {
       console.error('Failed to load users:', error);
       return [];
@@ -32,6 +48,11 @@ class UserStorage {
   async findUserByEmail(email: string): Promise<User | null> {
     const users = await this.loadUsers();
     return users.find(user => user.email === email) || null;
+  }
+  
+  async findUserByUsername(username: string): Promise<User | null> {
+    const users = await this.loadUsers();
+    return users.find(user => user.username === username) || null;
   }
   
   async createUser(userData: Omit<User, 'id' | 'createdAt'>): Promise<User> {

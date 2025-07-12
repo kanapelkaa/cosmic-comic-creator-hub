@@ -16,10 +16,11 @@ interface AuthModalProps {
 }
 
 const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProps) => {
-  const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   
   const { login, register } = useAuth();
@@ -28,6 +29,7 @@ const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProps) => {
   if (!isOpen) return null;
 
   const resetForm = () => {
+    setEmailOrUsername("");
     setEmail("");
     setPassword("");
     setConfirmPassword("");
@@ -69,12 +71,12 @@ const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProps) => {
         } else {
           toast({
             title: "Ошибка",
-            description: "Пользователь с таким email уже существует",
+            description: "Пользователь с таким email или именем уже существует",
             variant: "destructive"
           });
         }
       } else {
-        const success = await login(email, password);
+        const success = await login(emailOrUsername, password);
         if (success) {
           toast({
             title: "Успешно",
@@ -85,7 +87,7 @@ const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProps) => {
         } else {
           toast({
             title: "Ошибка",
-            description: "Неверный email или пароль",
+            description: "Неверный email/имя пользователя или пароль",
             variant: "destructive"
           });
         }
@@ -117,30 +119,46 @@ const AuthModal = ({ isOpen, onClose, mode, onModeChange }: AuthModalProps) => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'register' && (
+              <>
+                <div>
+                  <Label htmlFor="username">Имя пользователя</Label>
+                  <Input
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Введите имя пользователя"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Введите email"
+                    required
+                  />
+                </div>
+              </>
+            )}
+            
+            {mode === 'login' && (
               <div>
-                <Label htmlFor="username">Имя пользователя</Label>
+                <Label htmlFor="emailOrUsername">Email или имя пользователя</Label>
                 <Input
-                  id="username"
+                  id="emailOrUsername"
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Введите имя пользователя"
+                  value={emailOrUsername}
+                  onChange={(e) => setEmailOrUsername(e.target.value)}
+                  placeholder="Введите email или имя пользователя"
                   required
                 />
               </div>
             )}
-            
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Введите email"
-                required
-              />
-            </div>
             
             <div>
               <Label htmlFor="password">Пароль</Label>

@@ -4,7 +4,7 @@ import { userStorage, User } from '@/services/userStorage';
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (emailOrUsername: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -23,9 +23,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (emailOrUsername: string, password: string): Promise<boolean> => {
     try {
-      const foundUser = await userStorage.findUserByEmail(email);
+      // Try to find user by email first, then by username
+      let foundUser = await userStorage.findUserByEmail(emailOrUsername);
+      if (!foundUser) {
+        foundUser = await userStorage.findUserByUsername(emailOrUsername);
+      }
       
       if (foundUser && foundUser.password === password) {
         // Remove password from stored user data for security
@@ -46,9 +50,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
     try {
-      // Check if user already exists
-      const existingUser = await userStorage.findUserByEmail(email);
-      if (existingUser) {
+      // Check if user already exists by email or username
+      const existingUserByEmail = await userStorage.findUserByEmail(email);
+      const existingUserByUsername = await userStorage.findUserByUsername(username);
+      
+      if (existingUserByEmail || existingUserByUsername) {
         return false;
       }
       
