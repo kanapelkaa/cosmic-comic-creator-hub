@@ -60,6 +60,9 @@ const Navigation = () => {
               <Button variant="ghost" asChild>
                 <Link to="/camp">Лагерь</Link>
               </Button>
+              <Button variant="ghost" asChild>
+                <Link to="/reviews">Отзывы</Link>
+              </Button>
             </div>
 
             {/* Auth Section & Theme Toggle */}
@@ -125,6 +128,9 @@ const Navigation = () => {
               </Button>
               <Button variant="ghost" asChild className="w-full justify-start">
                 <Link to="/camp" onClick={() => setIsMenuOpen(false)}>Лагерь</Link>
+              </Button>
+              <Button variant="ghost" asChild className="w-full justify-start">
+                <Link to="/reviews" onClick={() => setIsMenuOpen(false)}>Отзывы</Link>
               </Button>
               
               <div className="flex items-center justify-between pt-2">
