@@ -12,6 +12,7 @@ export interface Ticket {
   createdAt: string;
   updatedAt: string;
   responses: TicketResponse[];
+  isGuest?: boolean;
 }
 
 export interface TicketResponse {
@@ -51,6 +52,36 @@ class TicketStorage {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       responses: []
+    };
+    
+    tickets.push(newTicket);
+    localStorage.setItem(this.TICKETS_KEY, JSON.stringify(tickets));
+    return newTicket;
+  }
+
+  createGuestTicket(ticketData: {
+    name: string;
+    email: string;
+    subject: string;
+    message: string;
+    category: Ticket['category'];
+    priority: Ticket['priority'];
+  }): Ticket {
+    const tickets = this.getTickets();
+    const newTicket: Ticket = {
+      id: Date.now().toString(),
+      userId: 'guest_' + Date.now(),
+      username: ticketData.name,
+      email: ticketData.email,
+      subject: ticketData.subject,
+      message: ticketData.message,
+      status: 'open',
+      priority: ticketData.priority,
+      category: ticketData.category,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      responses: [],
+      isGuest: true
     };
     
     tickets.push(newTicket);
@@ -111,7 +142,8 @@ class TicketStorage {
       inProgress: tickets.filter(t => t.status === 'in-progress').length,
       resolved: tickets.filter(t => t.status === 'resolved').length,
       closed: tickets.filter(t => t.status === 'closed').length,
-      urgent: tickets.filter(t => t.priority === 'urgent').length
+      urgent: tickets.filter(t => t.priority === 'urgent').length,
+      guest: tickets.filter(t => t.isGuest).length
     };
   }
 }

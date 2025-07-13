@@ -107,21 +107,30 @@ const Support = () => {
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Поддержка</h1>
-          <p className="text-muted-foreground">Создавайте тикеты и получайте помощь от нашей команды поддержки</p>
+          <p className="text-muted-foreground">
+            {isAuthenticated 
+              ? "Создавайте тикеты и получайте помощь от нашей команды поддержки"
+              : "Для отслеживания тикетов войдите в систему. Или используйте кнопку помощи на главной странице для быстрых вопросов."
+            }
+          </p>
         </div>
 
         {!isAuthenticated ? (
           <Card>
             <CardHeader>
-              <CardTitle>Войдите для создания тикетов</CardTitle>
+              <CardTitle>Войдите для управления тикетами</CardTitle>
               <CardDescription>
                 Для создания и отслеживания тикетов поддержки необходимо войти в систему.
+                Если у вас срочный вопрос, используйте кнопку помощи на главной странице.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <Button onClick={() => setShowAuthModal(true)}>
                 Войти
               </Button>
+              <p className="text-sm text-muted-foreground">
+                Или <a href="/" className="text-primary hover:underline">вернитесь на главную</a> и используйте кнопку помощи в правом нижнем углу для быстрых вопросов.
+              </p>
             </CardContent>
           </Card>
         ) : (

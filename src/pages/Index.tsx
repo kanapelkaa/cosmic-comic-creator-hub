@@ -1,8 +1,60 @@
 
 import Navigation from "@/components/Navigation";
-import { Mail, MessageCircle, Users } from "lucide-react";
+import { Mail, MessageCircle, Users, HelpCircle } from "lucide-react";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { toast } from "@/hooks/use-toast";
+import { ticketStorage } from "@/services/ticketStorage";
+
+interface GuestTicketFormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  category: string;
+  priority: string;
+}
 
 const Index = () => {
+  const [isTicketDialogOpen, setIsTicketDialogOpen] = useState(false);
+
+  const form = useForm<GuestTicketFormData>({
+    defaultValues: {
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+      category: 'other',
+      priority: 'medium'
+    }
+  });
+
+  const onSubmit = (data: GuestTicketFormData) => {
+    const ticket = ticketStorage.createGuestTicket({
+      name: data.name,
+      email: data.email,
+      subject: data.subject,
+      message: data.message,
+      category: data.category as any,
+      priority: data.priority as any
+    });
+
+    if (ticket) {
+      toast({
+        title: "Тикет создан",
+        description: "Ваш запрос отправлен. Мы ответим на указанный email."
+      });
+      setIsTicketDialogOpen(false);
+      form.reset();
+    }
+  };
+
   return (
     <div className="min-h-screen relative">
       {/* Modern Gradient Background */}
@@ -78,6 +130,142 @@ const Index = () => {
           </div>
         </div>
       </div>
+
+      {/* Floating Support Button */}
+      <Dialog open={isTicketDialogOpen} onOpenChange={setIsTicketDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 z-50"
+            size="icon"
+          >
+            <HelpCircle className="w-6 h-6" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Связаться с поддержкой</DialogTitle>
+            <DialogDescription>
+              Опишите вашу проблему или вопрос, и мы свяжемся с вами.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Имя</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ваше имя" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="your@email.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="subject"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Тема</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Краткое описание проблемы" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Категория</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Выберите категорию" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="technical">Техническая проблема</SelectItem>
+                        <SelectItem value="billing">Биллинг</SelectItem>
+                        <SelectItem value="feature-request">Запрос функции</SelectItem>
+                        <SelectItem value="bug-report">Сообщение об ошибке</SelectItem>
+                        <SelectItem value="other">Другое</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="priority"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Приоритет</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Выберите приоритет" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="low">Низкий</SelectItem>
+                        <SelectItem value="medium">Средний</SelectItem>
+                        <SelectItem value="high">Высокий</SelectItem>
+                        <SelectItem value="urgent">Срочный</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Сообщение</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Подробно опишите вашу проблему или вопрос..."
+                        className="min-h-[80px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full">
+                Отправить запрос
+              </Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
