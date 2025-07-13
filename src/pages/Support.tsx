@@ -29,6 +29,7 @@ const Support = () => {
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [responseMessage, setResponseMessage] = useState('');
 
   const form = useForm<TicketFormData>({
@@ -371,6 +372,8 @@ const Support = () => {
         <AuthModal
           isOpen={showAuthModal}
           onClose={() => setShowAuthModal(false)}
+          mode={authMode}
+          onModeChange={(mode) => setAuthMode(mode)}
         />
       )}
     </div>
