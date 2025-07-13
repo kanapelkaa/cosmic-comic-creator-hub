@@ -10,7 +10,7 @@ import { Comic } from "@/hooks/useComics";
 import AdminStatistics from "@/components/admin/AdminStatistics";
 import PublishedComicsTab from "@/components/admin/PublishedComicsTab";
 import ModerationTab from "@/components/admin/ModerationTab";
-import SupportTab from "@/components/admin/SupportTab";
+import { SupportTab } from "@/components/admin/SupportTab";
 import AdminLoginModal from "@/components/AdminLoginModal";
 
 const Admin = () => {
