@@ -13,6 +13,7 @@ import ComicView from "./pages/ComicView";
 import Camp from "./pages/Camp";
 import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
+import Support from "./pages/Support";
 import Tetris from "./pages/Tetris";
 import NotFound from "./pages/NotFound";
 
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/camp" element={<Camp />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/support" element={<Support />} />
             <Route path="/tetris" element={<Tetris />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

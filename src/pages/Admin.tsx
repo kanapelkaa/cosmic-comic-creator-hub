@@ -4,17 +4,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useComics } from "@/hooks/useComics";
 import { useVisitorCount } from "@/hooks/useVisitorCount";
 import { useAuth } from "@/hooks/useAuth";
+import { useTickets } from "@/hooks/useTickets";
 import ComicForm from "@/components/ComicForm";
 import { Comic } from "@/hooks/useComics";
 import AdminStatistics from "@/components/admin/AdminStatistics";
 import PublishedComicsTab from "@/components/admin/PublishedComicsTab";
 import ModerationTab from "@/components/admin/ModerationTab";
+import SupportTab from "@/components/admin/SupportTab";
 import AdminLoginModal from "@/components/AdminLoginModal";
 
 const Admin = () => {
   const { allComics, pendingComics, deleteComic, moderateComic, getTopUsers } = useComics();
   const visitorCount = useVisitorCount();
   const { user, logout } = useAuth();
+  const { getTicketStats } = useTickets();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingComic, setEditingComic] = useState<Comic | undefined>();
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -30,6 +33,7 @@ const Admin = () => {
 
   const publishedComics = allComics.filter(comic => comic.status === 'published');
   const topUsers = getTopUsers();
+  const ticketStats = getTicketStats();
 
   const handleEditComic = (comic: Comic) => {
     setEditingComic(comic);
@@ -81,7 +85,7 @@ const Admin = () => {
         <div className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">Админ панель</h1>
-            <p className="text-muted-foreground">Управляйте комиксами и смотрите статистику сайта</p>
+            <p className="text-muted-foreground">Управляйте комиксами, поддержкой и смотрите статистику сайта</p>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">
@@ -114,6 +118,14 @@ const Admin = () => {
                 </span>
               )}
             </TabsTrigger>
+            <TabsTrigger value="support" className="relative">
+              Поддержка
+              {ticketStats.open + ticketStats.inProgress > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {ticketStats.open + ticketStats.inProgress}
+                </span>
+              )}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="published">
@@ -130,6 +142,10 @@ const Admin = () => {
               pendingComics={pendingComics}
               onModerateComic={handleModerateComic}
             />
+          </TabsContent>
+
+          <TabsContent value="support">
+            <SupportTab />
           </TabsContent>
         </Tabs>
       </div>
