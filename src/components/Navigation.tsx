@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "./ThemeToggle";
 import AuthModal from "./AuthModal";
 import {
   DropdownMenu,
@@ -61,8 +62,9 @@ const Navigation = () => {
               </Button>
             </div>
 
-            {/* Auth Section */}
+            {/* Auth Section & Theme Toggle */}
             <div className="hidden md:flex items-center space-x-2">
+              <ThemeToggle />
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -124,6 +126,11 @@ const Navigation = () => {
               <Button variant="ghost" asChild className="w-full justify-start">
                 <Link to="/camp" onClick={() => setIsMenuOpen(false)}>Лагерь</Link>
               </Button>
+              
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-sm text-muted-foreground">Тема:</span>
+                <ThemeToggle />
+              </div>
               
               {isAuthenticated ? (
                 <>
