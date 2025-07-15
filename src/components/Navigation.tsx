@@ -58,6 +58,9 @@ const Navigation = () => {
                 <Link to="/comics">Комиксы</Link>
               </Button>
               <Button variant="ghost" asChild>
+                <Link to="/movies">Фильмы</Link>
+              </Button>
+              <Button variant="ghost" asChild>
                 <Link to="/camp">Лагерь</Link>
               </Button>
               <Button variant="ghost" asChild>
@@ -125,6 +128,9 @@ const Navigation = () => {
               </Button>
               <Button variant="ghost" asChild className="w-full justify-start">
                 <Link to="/comics" onClick={() => setIsMenuOpen(false)}>Комиксы</Link>
+              </Button>
+              <Button variant="ghost" asChild className="w-full justify-start">
+                <Link to="/movies" onClick={() => setIsMenuOpen(false)}>Фильмы</Link>
               </Button>
               <Button variant="ghost" asChild className="w-full justify-start">
                 <Link to="/camp" onClick={() => setIsMenuOpen(false)}>Лагерь</Link>
