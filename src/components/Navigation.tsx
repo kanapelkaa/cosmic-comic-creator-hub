@@ -64,6 +64,9 @@ const Navigation = () => {
                 <Link to="/camp">Лагерь</Link>
               </Button>
               <Button variant="ghost" asChild>
+                <Link to="/chess">Шахматы</Link>
+              </Button>
+              <Button variant="ghost" asChild>
                 <Link to="/reviews">Отзывы</Link>
               </Button>
             </div>
@@ -134,6 +137,9 @@ const Navigation = () => {
               </Button>
               <Button variant="ghost" asChild className="w-full justify-start">
                 <Link to="/camp" onClick={() => setIsMenuOpen(false)}>Лагерь</Link>
+              </Button>
+              <Button variant="ghost" asChild className="w-full justify-start">
+                <Link to="/chess" onClick={() => setIsMenuOpen(false)}>Шахматы</Link>
               </Button>
               <Button variant="ghost" asChild className="w-full justify-start">
                 <Link to="/reviews" onClick={() => setIsMenuOpen(false)}>Отзывы</Link>

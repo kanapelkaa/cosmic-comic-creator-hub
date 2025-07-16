@@ -13,6 +13,7 @@ import Comics from "./pages/Comics";
 import ComicView from "./pages/ComicView";
 import Movies from "./pages/Movies";
 import Camp from "./pages/Camp";
+import Chess from "./pages/Chess";
 import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
 import Support from "./pages/Support";
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="/comic/:id" element={<ComicView />} />
               <Route path="/movies" element={<Movies />} />
               <Route path="/camp" element={<Camp />} />
+              <Route path="/chess" element={<Chess />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/profile" element={<Profile />} />
