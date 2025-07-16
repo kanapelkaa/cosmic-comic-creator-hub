@@ -129,35 +129,76 @@ const Chess = () => {
     const isPlayerWhite = playerColor === "white";
     
     return (
-      <div className="grid grid-cols-8 gap-0 border-2 border-border w-96 h-96 mx-auto">
-        {board.map((row, rowIndex) => 
-          row.map((piece, colIndex) => {
-            const actualRow = isPlayerWhite ? rowIndex : 7 - rowIndex;
-            const actualCol = isPlayerWhite ? colIndex : 7 - colIndex;
-            const square = String.fromCharCode(97 + actualCol) + (8 - actualRow);
-            const isLight = (actualRow + actualCol) % 2 === 0;
-            const isSelected = selectedSquare === square;
-            
-            return (
-              <div
-                key={`${actualRow}-${actualCol}`}
-                className={`
-                  w-12 h-12 flex items-center justify-center cursor-pointer text-2xl font-bold
-                  ${isLight ? 'bg-amber-100' : 'bg-amber-800'}
-                  ${isSelected ? 'ring-4 ring-blue-500' : ''}
-                  hover:opacity-80
-                `}
-                onClick={() => handleSquareClick(square)}
-              >
-                {piece && (
-                  <span className={piece.color === 'w' ? 'text-white' : 'text-black'}>
-                    {getPieceSymbol(piece.type, piece.color)}
-                  </span>
-                )}
-              </div>
-            );
-          })
-        )}
+      <div className="relative">
+        {/* Board coordinates */}
+        <div className="absolute -left-6 top-0 h-full flex flex-col justify-around text-sm font-medium text-muted-foreground">
+          {(isPlayerWhite ? ['8', '7', '6', '5', '4', '3', '2', '1'] : ['1', '2', '3', '4', '5', '6', '7', '8']).map(num => (
+            <div key={num} className="h-16 flex items-center">{num}</div>
+          ))}
+        </div>
+        <div className="absolute -bottom-6 left-0 w-full flex justify-around text-sm font-medium text-muted-foreground">
+          {(isPlayerWhite ? ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] : ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a']).map(letter => (
+            <div key={letter} className="w-16 text-center">{letter}</div>
+          ))}
+        </div>
+        
+        <div className="grid grid-cols-8 gap-0 border-4 border-border rounded-lg overflow-hidden shadow-2xl w-[512px] h-[512px] mx-auto bg-card">
+          {board.map((row, rowIndex) => 
+            row.map((piece, colIndex) => {
+              const actualRow = isPlayerWhite ? rowIndex : 7 - rowIndex;
+              const actualCol = isPlayerWhite ? colIndex : 7 - colIndex;
+              const square = String.fromCharCode(97 + actualCol) + (8 - actualRow);
+              const isLight = (actualRow + actualCol) % 2 === 0;
+              const isSelected = selectedSquare === square;
+              const possibleMoves = game?.moves({ square: selectedSquare as any, verbose: true }) || [];
+              const isValidMove = possibleMoves.some(move => move.to === square);
+              
+              return (
+                <div
+                  key={`${actualRow}-${actualCol}`}
+                  className={`
+                    w-16 h-16 flex items-center justify-center cursor-pointer text-4xl font-bold relative
+                    transition-all duration-200 hover:brightness-110
+                    ${isLight 
+                      ? 'bg-gradient-to-br from-amber-50 to-amber-100' 
+                      : 'bg-gradient-to-br from-amber-700 to-amber-800'
+                    }
+                    ${isSelected ? 'ring-4 ring-blue-500 ring-inset shadow-lg' : ''}
+                    ${isValidMove ? 'ring-2 ring-green-400 ring-inset' : ''}
+                  `}
+                  onClick={() => handleSquareClick(square)}
+                >
+                  {/* Valid move indicator */}
+                  {isValidMove && !piece && (
+                    <div className="absolute w-4 h-4 bg-green-400 rounded-full opacity-70" />
+                  )}
+                  {isValidMove && piece && (
+                    <div className="absolute inset-0 bg-red-400 opacity-20 rounded" />
+                  )}
+                  
+                  {piece && (
+                    <span 
+                      className={`
+                        drop-shadow-lg filter transition-transform hover:scale-110
+                        ${piece.color === 'w' 
+                          ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' 
+                          : 'text-gray-900 drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)]'
+                        }
+                      `}
+                      style={{
+                        textShadow: piece.color === 'w' 
+                          ? '2px 2px 4px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.5)' 
+                          : '2px 2px 4px rgba(255,255,255,0.8), -1px -1px 2px rgba(255,255,255,0.5)'
+                      }}
+                    >
+                      {getPieceSymbol(piece.type, piece.color)}
+                    </span>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
     );
   };
@@ -175,32 +216,32 @@ const Chess = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <Navigation />
       <div className="container mx-auto px-4 pt-20">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold text-foreground mb-8 text-center">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-5xl font-bold text-foreground mb-8 text-center bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
             Шахматы
           </h1>
 
           {!gameStarted ? (
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle>Настройки игры</CardTitle>
+            <Card className="mb-8 max-w-2xl mx-auto shadow-xl border-2">
+              <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5">
+                <CardTitle className="text-2xl text-center">Настройки игры</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 p-8">
                 <div>
-                  <Label className="text-base font-medium mb-3 block">
+                  <Label className="text-lg font-medium mb-4 block">
                     Уровень сложности бота (1-10):
                   </Label>
                   <Select value={difficulty} onValueChange={setDifficulty}>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full h-12 text-lg">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {Array.from({ length: 10 }, (_, i) => (
-                        <SelectItem key={i + 1} value={String(i + 1)}>
-                          Уровень {i + 1}
+                        <SelectItem key={i + 1} value={String(i + 1)} className="text-lg">
+                          Уровень {i + 1} {i < 3 ? '(Легкий)' : i < 7 ? '(Средний)' : '(Сложный)'}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -208,57 +249,84 @@ const Chess = () => {
                 </div>
 
                 <div>
-                  <Label className="text-base font-medium mb-3 block">
+                  <Label className="text-lg font-medium mb-4 block">
                     Выберите цвет фигур:
                   </Label>
-                  <RadioGroup value={playerColor} onValueChange={setPlayerColor}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="white" id="white" />
-                      <Label htmlFor="white">Белые (первый ход)</Label>
+                  <RadioGroup value={playerColor} onValueChange={setPlayerColor} className="space-y-3">
+                    <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50">
+                      <RadioGroupItem value="white" id="white" className="w-5 h-5" />
+                      <Label htmlFor="white" className="text-lg cursor-pointer flex items-center">
+                        <span className="mr-2 text-2xl">♔</span>
+                        Белые (первый ход)
+                      </Label>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="black" id="black" />
-                      <Label htmlFor="black">Чёрные</Label>
+                    <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50">
+                      <RadioGroupItem value="black" id="black" className="w-5 h-5" />
+                      <Label htmlFor="black" className="text-lg cursor-pointer flex items-center">
+                        <span className="mr-2 text-2xl">♚</span>
+                        Чёрные
+                      </Label>
                     </div>
                   </RadioGroup>
                 </div>
 
-                <Button onClick={startGame} className="w-full">
+                <Button onClick={startGame} className="w-full h-12 text-lg font-semibold">
                   Начать игру
                 </Button>
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <div className="text-lg">
-                  <span className="font-medium">Ваш цвет:</span> {playerColor === "white" ? "Белые" : "Чёрные"}
-                </div>
-                <div className="text-lg">
-                  <span className="font-medium">Уровень бота:</span> {difficulty}
-                </div>
-                <Button onClick={resetGame} variant="outline">
-                  Новая игра
-                </Button>
-              </div>
+            <div className="space-y-8">
+              <Card className="shadow-lg">
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-center flex-wrap gap-4">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-lg font-medium">Ваш цвет:</span> 
+                      <span className="text-2xl">{playerColor === "white" ? "♔" : "♚"}</span>
+                      <span className="font-semibold">{playerColor === "white" ? "Белые" : "Чёрные"}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-lg font-medium">Уровень бота:</span> 
+                      <span className="font-semibold text-primary">{difficulty}</span>
+                    </div>
+                    <Button onClick={resetGame} variant="outline" className="font-semibold">
+                      Новая игра
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
 
               {gameStatus && (
-                <div className="text-center text-lg font-medium text-primary">
-                  {gameStatus}
-                </div>
+                <Card className="border-2 border-primary/50 bg-gradient-to-r from-primary/5 to-primary/10">
+                  <CardContent className="p-4">
+                    <div className="text-center text-xl font-bold text-primary">
+                      {gameStatus}
+                    </div>
+                  </CardContent>
+                </Card>
               )}
 
-              <div className="flex justify-center">
+              <div className="flex justify-center py-8">
                 {renderBoard()}
               </div>
 
               {game && (
-                <div className="text-center text-sm text-muted-foreground">
-                  Ход: {game.turn() === 'w' ? 'Белые' : 'Чёрные'}
-                  {selectedSquare && (
-                    <span className="ml-4">Выбрана клетка: {selectedSquare}</span>
-                  )}
-                </div>
+                <Card className="max-w-2xl mx-auto">
+                  <CardContent className="p-4">
+                    <div className="text-center space-y-2">
+                      <div className="text-lg">
+                        <span className="font-medium">Ход:</span> 
+                        <span className="ml-2 text-2xl">{game.turn() === 'w' ? '♔' : '♚'}</span>
+                        <span className="ml-1 font-semibold">{game.turn() === 'w' ? 'Белые' : 'Чёрные'}</span>
+                      </div>
+                      {selectedSquare && (
+                        <div className="text-sm text-muted-foreground">
+                          Выбрана клетка: <span className="font-mono font-semibold">{selectedSquare}</span>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               )}
             </div>
           )}
